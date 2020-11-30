@@ -19,10 +19,10 @@ knitr::opts_chunk$set(message=FALSE,warning=FALSE, cache=TRUE)
 # Welcome and GROOTings
 
 This is my Journal where I will be publishing my progress in Data Science Module courses at TUHH!
-##Welcome
+## Welcome
 Myself in brief, I am Mark Moawad; a car guy, roboticist and hobbyist!
 I come from the great country of Pharaohs; Egypt!
-I love dogs, LEGO, and music. If you share some or many interests with me don't hesitate to reach out, we might be good friends at the end of the day!
+I love dogs, LEGO, motorcycles and music. If you share some or many interests with me don't hesitate to reach out, we might be good friends at the end of the day!
 ## GROOTings
 I meant to say "GROOTings" instead of Greetings, because I am a huge fan of GROOT, actually I am GROOT, you are GROOT too. We are all GROOT!
 Have a GROOT day!
