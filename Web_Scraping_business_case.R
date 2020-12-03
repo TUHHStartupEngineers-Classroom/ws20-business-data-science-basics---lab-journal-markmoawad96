@@ -147,3 +147,58 @@ bike_json_tbl  <- html_bike_category %>%
   rowid_to_column(var='position') %>%
   left_join(bike_desc_tbl) %>%
   left_join(bike_url_tbl)
+
+# 2.2 Wrap it into a function ----
+
+get_bike_data <- function(url) {
+  
+  html_bike_category <- read_html(url)
+  
+  # Get the URLs
+  bike_url_tbl  <- html_bike_category %>%
+    html_nodes(css = ".productTile__contentWrapper > a") %>%
+    html_attr("href") %>%
+    str_remove(pattern = "\\?.*") %>%
+    enframe(name = "position", value = "url")
+  
+  # Get the descriptions
+  bike_desc_tbl <- html_bike_category %>%
+    html_nodes(css = '.productTile__productSummaryLeft > 
+                      meta[itemprop="description"]') %>%
+    html_attr("content") %>%
+    enframe(name = "position", value = "description")
+  
+  # Get JSON data
+  bike_json_tbl <- html_bike_category %>%
+    html_nodes(css = '.productGrid__listItem.xlt-producttile > div') %>%
+    html_attr("data-gtm-impression") %>%
+    map(fromJSON) %>% # need JSON ### need lists
+    map(purrr::pluck, 2, "impressions") %>% 
+    map(na_if, "not defined") %>%
+    map(na_if, "") %>%
+    map(~mutate(., across(c("dimension56","price"), as.numeric))) %>%
+    bind_rows() %>%
+    as_tibble() %>%
+    rowid_to_column(var='position') %>%
+    left_join(bike_desc_tbl) %>%
+    left_join(bike_url_tbl)
+}
+
+# Run the function with the first url to check if it is working
+bike_category_url <- bike_category_tbl$url[1]
+bike_data_tbl     <- get_bike_data(url = bike_category_url)
+
+bike_data_tbl
+
+# 2.3.1a Map the function against all urls
+
+# Extract the urls as a character vector
+bike_category_url_vec <- bike_category_tbl %>% 
+  pull(url)
+
+# Run the function with every url as an argument
+bike_data_lst <- map(bike_category_url_vec, get_bike_data)
+
+# Merge the list into a tibble
+bike_data_tbl <- bind_rows(bike_data_lst)
+saveRDS(bike_data_tbl, "bike_data_tbl.rds")
