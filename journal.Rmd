@@ -352,3 +352,78 @@ labs(
 ) + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ```
+# Web Data Scraping (Chapter 3) ----
+## Challenge 1 results
+In this section, the aim was to learn to scrap the web for data using an API. After a lot of research Accuweather API was chosen to acquire the info of 100 Countries.
+```{r}
+library(httr)
+library(jsonlite)
+library(dplyr)
+library(glue)
+my_apikey <- Sys.getenv("pwd")
+url <- modify_url(url = "http://dataservice.accuweather.com", path = glue("/locations/v1/topcities/100?apikey={my_apikey}&language=en-us&details=false"))
+resp <- GET(url)
+country_list <- resp %>% .$content %>% rawToChar() %>% fromJSON()
+City <- country_list$EnglishName
+Country <- country_list$Country$EnglishName
+Region <- country_list$Region$EnglishName
+Longitude <- country_list$GeoPosition$Longitude
+Latitude <- country_list$GeoPosition$Latitude
+Timezone <- country_list$TimeZone$Name
+#Optional to add GMT_Offset, it's only removed so that printing fits the screen
+#GMT_Offset <- country_list$TimeZone$GmtOffset
+country_list_as_df <- data.frame(City, Country, Region,
+                                  Longitude, Latitude, Timezone)
+head(country_list_as_df, 10)
+```
+## Challenge 2 results
+The goal of this challenge was to scrap the web manually using selector gadget to get the price details of one bike category of ROSE bike manufacturer. A graph was added at the end to give an insight on the price difference between the different MTB bike models of ROSE. The removed elements from the graph are not yet available for sale (coming soon).
+```{r}
+library(tidyverse) # Main Package - Loads dplyr, purrr, etc.
+library(rvest)     # HTML Hacking & Web Scraping
+library(xopen)     # Quickly opening URLs
+library(jsonlite)  # converts JSON files to R objects
+library(glue)      # concatenate strings
+library(stringi)   # character string/text processing
+library(ggplot2)
+url_home <- "https://www.rosebikes.de/fahrr%C3%A4der/mtb"
+
+html_home <- read_html(url_home)
+
+bike_name_tbl_challenge <- html_home %>%
+  
+  html_nodes('.catalog-category-bikes__title-text') %>%
+  
+  html_text %>%
+  
+  str_remove_all("\n") %>%
+  
+  enframe(name = "position", value = "name")
+
+bike_price_tbl_challenge <- html_home %>%
+  
+  html_nodes('.catalog-category-bikes__price-title') %>%
+  
+  html_text %>%
+  
+  str_remove_all("\n") %>%
+  
+  enframe(name = "position", value = "price") %>%
+  
+  na_if("") %>%
+  
+  mutate(price = price %>% str_remove_all("ab ")) %>%
+  
+  mutate(price_in_EUR = price %>% str_remove_all("€")) %>%
+  
+  select(-price) %>% mutate(price_in_EUR = readr::parse_number(.$price_in_EUR))
+
+bike_name_price_tbl <- left_join(bike_name_tbl_challenge, bike_price_tbl_challenge) %>%
+  select(-position)
+bike_name_price_tbl
+ggplot(bike_name_price_tbl, aes(x = name, y = price_in_EUR, color = name)) +
+  geom_col() +
+  expand_limits(x = 0, y = 0) +
+  labs(title = "Bike Model vs Price") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
