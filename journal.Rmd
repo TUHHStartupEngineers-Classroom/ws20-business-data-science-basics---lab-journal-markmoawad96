@@ -59,11 +59,11 @@ library(tidyverse)
 library(readxl)
 
 # 2.0 Importing Files ----
-bikes_tbl      <- read_excel(path = "/Users/fadyyoussef/Documents/DS_101/00_data/01_bike_sales/01_raw_data/bikes.xlsx")
+bikes_tbl      <- read_excel(path = "DS_101/00_data/01_bike_sales/01_raw_data/bikes.xlsx")
 
-orderlines_tbl <- read_excel("/Users/fadyyoussef/Documents/DS_101/00_data/01_bike_sales/01_raw_data/orderlines.xlsx")
+orderlines_tbl <- read_excel("DS_101/00_data/01_bike_sales/01_raw_data/orderlines.xlsx")
 
-bikeshops_tbl  <- read_excel("/Users/fadyyoussef/Documents/DS_101/00_data/01_bike_sales/01_raw_data/bikeshops.xlsx")
+bikeshops_tbl  <- read_excel("DS_101/00_data/01_bike_sales/01_raw_data/bikeshops.xlsx")
 
 # 3.0 Joining Data ----
 
@@ -216,11 +216,11 @@ labs(
 ```{r fig.width=9, fig.height=7}
 
 # 1.0 Importing Files ----
-bikes_tbl_challenge <- read_excel(path = "/Users/fadyyoussef/Documents/DS_101/00_data/01_bike_sales/01_raw_data/bikes.xlsx")
+bikes_tbl_challenge <- read_excel(path = "DS_101/00_data/01_bike_sales/01_raw_data/bikes.xlsx")
 
-orderlines_tbl_challenge <- read_excel("/Users/fadyyoussef/Documents/DS_101/00_data/01_bike_sales/01_raw_data/orderlines.xlsx")
+orderlines_tbl_challenge <- read_excel("DS_101/00_data/01_bike_sales/01_raw_data/orderlines.xlsx")
 
-bikeshops_tbl_challenge <- read_excel("/Users/fadyyoussef/Documents/DS_101/00_data/01_bike_sales/01_raw_data/bikeshops.xlsx")
+bikeshops_tbl_challenge <- read_excel("DS_101/00_data/01_bike_sales/01_raw_data/bikeshops.xlsx")
 
 
 # 2.0 Joining Data ----
@@ -453,7 +453,7 @@ col_types <- list(
 )
 
 patent_tbl <- vroom(
-  file       = "/Users/fadyyoussef/Documents/DS_101/02_data_wrangling/Patent_data_reduced/patent.tsv",
+  file       = "DS_101/02_data_wrangling/Patent_data_reduced/patent.tsv",
   delim      = "\t",
   col_types  = col_types,
   na         = c("", "NA", "NULL")
@@ -469,7 +469,7 @@ col_types_assignee <- list(
 )
 
 assignee_tbl <- vroom(
-  file       = "/Users/fadyyoussef/Documents/DS_101/02_data_wrangling/Patent_data_reduced/assignee.tsv", 
+  file       = "DS_101/02_data_wrangling/Patent_data_reduced/assignee.tsv", 
   delim      = "\t", 
   col_types  = col_types_assignee,
   na         = c("", "NA", "NULL")
@@ -483,7 +483,7 @@ col_types_patent_assignee <- list(
 )
 
 patent_assignee_tbl <- vroom(
-  file       = "/Users/fadyyoussef/Documents/DS_101/02_data_wrangling/Patent_data_reduced/patent_assignee.tsv", 
+  file       = "DS_101/02_data_wrangling/Patent_data_reduced/patent_assignee.tsv", 
   delim      = "\t", 
   col_types  = col_types_patent_assignee,
   na         = c("", "NA", "NULL")
@@ -497,7 +497,7 @@ col_types_uspc <- list(
 
 
 uspc_tbl <- vroom(
-  file       = "/Users/fadyyoussef/Documents/DS_101/02_data_wrangling/Patent_data_reduced/uspc.tsv", 
+  file       = "DS_101/02_data_wrangling/Patent_data_reduced/uspc.tsv", 
   delim      = "\t", 
   col_types  = col_types_uspc,
   na         = c("", "NA", "NULL")

@@ -15,7 +15,7 @@ col_types <- list(
 )
 
 patent_tbl <- vroom(
-  file       = "/Users/fadyyoussef/Documents/DS_101/02_data_wrangling/Patent_data_reduced/patent.tsv",
+  file       = "DS_101/02_data_wrangling/Patent_data_reduced/patent.tsv",
   delim      = "\t",
   col_types  = col_types,
   na         = c("", "NA", "NULL")
@@ -31,7 +31,7 @@ col_types_assignee <- list(
 )
 
 assignee_tbl <- vroom(
-  file       = "/Users/fadyyoussef/Documents/DS_101/02_data_wrangling/Patent_data_reduced/assignee.tsv", 
+  file       = "DS_101/02_data_wrangling/Patent_data_reduced/assignee.tsv", 
   delim      = "\t", 
   col_types  = col_types_assignee,
   na         = c("", "NA", "NULL")
@@ -45,7 +45,7 @@ col_types_patent_assignee <- list(
 )
 
 patent_assignee_tbl <- vroom(
-  file       = "/Users/fadyyoussef/Documents/DS_101/02_data_wrangling/Patent_data_reduced/patent_assignee.tsv", 
+  file       = "DS_101/02_data_wrangling/Patent_data_reduced/patent_assignee.tsv", 
   delim      = "\t", 
   col_types  = col_types_patent_assignee,
   na         = c("", "NA", "NULL")
@@ -59,7 +59,7 @@ col_types_uspc <- list(
 
 
 uspc_tbl <- vroom(
-  file       = "/Users/fadyyoussef/Documents/DS_101/02_data_wrangling/Patent_data_reduced/uspc.tsv", 
+  file       = "DS_101/02_data_wrangling/Patent_data_reduced/uspc.tsv", 
   delim      = "\t", 
   col_types  = col_types_uspc,
   na         = c("", "NA", "NULL")

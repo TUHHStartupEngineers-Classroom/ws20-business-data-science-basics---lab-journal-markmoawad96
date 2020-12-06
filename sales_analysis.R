@@ -7,11 +7,11 @@ library(tidyverse)
 library(readxl)
 
 # 2.0 Importing Files ----
-bikes_tbl      <- read_excel(path = "/Users/fadyyoussef/Documents/DS_101/00_data/01_bike_sales/01_raw_data/bikes.xlsx")
+bikes_tbl      <- read_excel(path = "DS_101/00_data/01_bike_sales/01_raw_data/bikes.xlsx")
 
-orderlines_tbl <- read_excel("/Users/fadyyoussef/Documents/DS_101/00_data/01_bike_sales/01_raw_data/orderlines.xlsx")
+orderlines_tbl <- read_excel("DS_101/00_data/01_bike_sales/01_raw_data/orderlines.xlsx")
 
-bikeshops_tbl  <- read_excel("/Users/fadyyoussef/Documents/DS_101/00_data/01_bike_sales/01_raw_data/bikeshops.xlsx")
+bikeshops_tbl  <- read_excel("DS_101/00_data/01_bike_sales/01_raw_data/bikeshops.xlsx")
 
 # 3.0 Examining Data ----
 orderlines_tbl
@@ -170,13 +170,13 @@ labs(
 #install.packages("writexl")
 library("writexl")
 bike_orderlines_wrangled_tbl %>%
-write_xlsx("/Users/fadyyoussef/Documents/DS_101/00_data/01_bike_sales/02_wrangled_data/bike_orderlines.xlsx")
+write_xlsx("DS_101/00_data/01_bike_sales/02_wrangled_data/bike_orderlines.xlsx")
 
 # 7.2 CSV ----
 bike_orderlines_wrangled_tbl %>% 
-write_csv("/Users/fadyyoussef/Documents/DS_101/00_data/01_bike_sales/02_wrangled_data/bike_orderlines.csv")
+write_csv("DS_101/00_data/01_bike_sales/02_wrangled_data/bike_orderlines.csv")
 
 # 7.3 RDS ----
 bike_orderlines_wrangled_tbl %>% 
-write_rds("/Users/fadyyoussef/Documents/DS_101/00_data/01_bike_sales/02_wrangled_data/bike_orderlines.rds")
+write_rds("DS_101/00_data/01_bike_sales/02_wrangled_data/bike_orderlines.rds")
 

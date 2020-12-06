@@ -8,8 +8,7 @@ library(dplyr)
 
 covid_data_tbl <- read_csv("https://opendata.ecdc.europa.eu/covid19/casedistribution/csv")
 
-#Table for Challenge 1 before plot
-
+# Preparing Data for plotting
 covid_data_wrangeled_tbl<- covid_data_tbl %>%
   select(countriesAndTerritories, cases, dateRep, month, year, day) %>%
   relocate(year, month, day) %>%
@@ -37,9 +36,7 @@ covid_data_wrangeled_tbl %>%
                                                           "September",
                                                           "October",
                                                           "November")) +
- # scale_x_continuous(labels = scales::dollar_format(scale = 1/1e6,
-                                                     #prefix= "",
-                                                    # suffix= "February")) +
+
   labs(
     title = ("COVID-19 confirmed cases worldwide"),
     subtitle = ("United States has the highest rate of cases"),

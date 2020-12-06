@@ -4,13 +4,13 @@ library(tidyverse)
 library(readxl)
 
 # 2.0 Importing Files ----
-bikes_tbl     <- read_excel(path = "/Users/fadyyoussef/Documents/DS_101/00_data/01_bike_sales/01_raw_data/bikes.xlsx")
+bikes_tbl     <- read_excel(path = "DS_101/00_data/01_bike_sales/01_raw_data/bikes.xlsx")
 
-bike_orderlines_tbl <- read_rds("/Users/fadyyoussef/Documents/DS_101/00_data/01_bike_sales/02_wrangled_data/bike_orderlines.rds")
+bike_orderlines_tbl <- read_rds("DS_101/00_data/01_bike_sales/02_wrangled_data/bike_orderlines.rds")
 
 # 3.0 Manipulating Data using column operations ----
 ## 3.1 Separating and renaming columns ----
-bikes_tbl <- read_excel(path = "/Users/fadyyoussef/Documents/DS_101/00_data/01_bike_sales/01_raw_data/bikes.xlsx") %>%
+bikes_tbl <- read_excel(path = "DS_101/00_data/01_bike_sales/01_raw_data/bikes.xlsx") %>%
                         separate(col = category,
                                  into = c("category.1", "category.2", "category.3"),
                                  sep = " - ") %>%
