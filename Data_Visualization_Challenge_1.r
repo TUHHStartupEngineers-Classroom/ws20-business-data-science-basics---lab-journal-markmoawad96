@@ -9,10 +9,10 @@ library(dplyr)
 covid_data_tbl <- read_csv("https://opendata.ecdc.europa.eu/covid19/casedistribution/csv")
 
 # Preparing Data for plotting
-covid_data_wrangeled_tbl<- covid_data_tbl %>%
+covid_data_wrangeled_tbl <- covid_data_tbl %>%
   select(countriesAndTerritories, cases, dateRep, month, year, day) %>%
   relocate(year, month, day) %>%
-  filter(year == 2020, month > 1) %>%
+  filter(year == 2020, month >= 1) %>%
   filter(day != 1) %>%
   filter(countriesAndTerritories == "France" | countriesAndTerritories == "Germany" | countriesAndTerritories == "United_Kingdom" | countriesAndTerritories == "Spain" | countriesAndTerritories == "United_States_of_America") %>%
   group_by(countriesAndTerritories,month) %>%
@@ -26,7 +26,8 @@ covid_data_wrangeled_tbl %>%
   scale_y_continuous(labels = scales::dollar_format(scale  = 1/1e6, 
                                                     prefix = "", 
                                                     suffix = "M")) +
-  scale_x_continuous(breaks = seq(2, 11 , by=1),labels= c("February",
+  scale_x_continuous(breaks = seq(1, 11 , by=1),labels= c("January",
+                                                          "February",
                                                           "March",
                                                           "April",
                                                           "May",
@@ -48,5 +49,5 @@ covid_data_wrangeled_tbl %>%
   geom_label(aes(label = (totalcases)), 
              hjust = "inward",
              size  = 3,
-             color = RColorBrewer::brewer.pal(n = 11, name = "RdBu")[11]) +
+             color = RColorBrewer::brewer.pal(n = 12, name = "Blues")[8]) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))

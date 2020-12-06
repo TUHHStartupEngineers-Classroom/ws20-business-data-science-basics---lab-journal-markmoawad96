@@ -1,7 +1,7 @@
 ---
-title: "Journal (reproducible report)"
+title: "Journal"
 author: "Mark Moawad"
-date: "2020-11-23"
+date: ""
 output:
   html_document:
     toc: true
@@ -162,7 +162,6 @@ labs(
   y = "Revenue"
 )
 ```
-
 
 #### Sales by year and Main bike Category results
 
@@ -380,9 +379,11 @@ country_list_as_df <- data.frame(City, Country, Region,
                                   Longitude, Latitude, Timezone)
 head(country_list_as_df, 10)
 ```
+
 ## Challenge 2 results
 
 The goal of this challenge was to scrap the web manually using selector gadget to get the price details of one bike category of ROSE bike manufacturer. A graph was added at the end to give an insight on the price difference between the different MTB bike models of ROSE. The removed elements from the graph are not yet available for sale (coming soon).
+
 ```{r}
 library(tidyverse) # Main Package - Loads dplyr, purrr, etc.
 library(rvest)     # HTML Hacking & Web Scraping
@@ -435,6 +436,7 @@ ggplot(bike_name_price_tbl, aes(x = name, y = price_in_EUR, color = name)) +
 
 # Data Wrangling (Chapter 4)
 In this chapter, the acquired skills of Data Wrangling were used as much as possible to answer the following questions with Data Analysis:
+
 ```{r}
 # Importing library: ---- 
 library(vroom)
@@ -511,7 +513,9 @@ setDT(patent_tbl)
 setDT(patent_assignee_tbl)
 setDT(uspc_tbl)
 ```
+
 ## Which US company has the most patents?
+
 ```{r}
 # 4.0 DATA WRANGLING ----
 # Q1.What US company / corporation has the most patents? 
@@ -536,6 +540,7 @@ us_top_10
 ```
 
 ## Recent patent activity: What US company had the most patents granted in 2019?
+
 ```{r}
 # Q2. What US company had the most patents granted in 2019? 
 
@@ -576,6 +581,7 @@ us_top_10_2014_new
 ```
 
 ## What is the most innovative tech sector? For the top 10 companies (worldwide) with the most patents, what are the top 5 USPTO tech main classes?
+
 ```{r}
 #Q3. What is the most innovative tech sector? 
 #For the top 10 companies (worldwide) with the most patents,
@@ -588,7 +594,8 @@ combined_data_3 <- merge(x = uspc_tbl, y = combined_data_2, by = "patent_id")
 top10_worlwide_patents <- combined_data_3  %>%
                   filter(!is.na(patent_id) || !is.na(organization))%>%
                   group_by(organization) %>%
-                  arrange(desc(mainclass_id)) %>% # set mainclass order first, the result will be sorted automatically 
+                  arrange(desc(mainclass_id)) %>%
+  # set mainclass order first, the result will be sorted automatically 
                   count(patent_id) %>%
                   select(-patent_id)%>%
                   summarise(total_patents_wordwide = sum(n))%>%
@@ -596,4 +603,139 @@ top10_worlwide_patents <- combined_data_3  %>%
                   arrange(desc(total_patents_wordwide)) %>% slice(1:10)  
 
 top10_worlwide_patents 
+```
+
+# Data Visualization (Chapter 5)
+
+This is the last chapter and the conclusion of "Data Science Basics" course at TUHH. The objective of this chapter is to learn the proper tools for visualizing data so as to convert the data in table or text format to a graph from which meaningful info can be extracted.
+
+## Challenge 1 Plot
+
+This plot depicts the rate of change of COVID-19 cases along the year 2020, and determines which country has a significance in the number of cases.
+
+```{r plot2, fig.width=8, fig.height=6}
+library(scales)
+library(tidyverse)
+library(ggplot2)
+library(lubridate)
+library(readxl)
+library(ggthemes)
+library(dplyr)
+
+covid_data_tbl <- read_csv("https://opendata.ecdc.europa.eu/covid19/casedistribution/csv")
+
+# Preparing Data for plotting
+covid_data_wrangeled_tbl <- covid_data_tbl %>%
+  select(countriesAndTerritories, cases, dateRep, month, year, day) %>%
+  relocate(year, month, day) %>%
+  filter(year == 2020, month >= 1) %>%
+  filter(day != 1) %>%
+  filter(countriesAndTerritories == "France" | countriesAndTerritories == "Germany" | countriesAndTerritories == "United_Kingdom" | countriesAndTerritories == "Spain" | countriesAndTerritories == "United_States_of_America") %>%
+  group_by(countriesAndTerritories,month) %>%
+  summarize(totalcases = sum(cases)) %>%
+  ungroup()
+    
+
+covid_data_wrangeled_tbl %>%
+  ggplot(aes(month ,totalcases, color = countriesAndTerritories)) +
+  geom_smooth(method = "loess", span = 0.2) +
+  scale_y_continuous(labels = scales::dollar_format(scale  = 1/1e6, 
+                                                    prefix = "", 
+                                                    suffix = "M")) +
+  scale_x_continuous(breaks = seq(1, 11 , by=1),labels= c("January",
+                                                          "February",
+                                                          "March",
+                                                          "April",
+                                                          "May",
+                                                          "June",
+                                                          "July",
+                                                          "August",
+                                                          "September",
+                                                          "October",
+                                                          "November")) +
+
+  labs(
+    title = ("COVID-19 confirmed cases worldwide"),
+    subtitle = ("United States has the highest rate of cases"),
+    caption = "",
+    x = "(Year 2020)",
+    y = "Cumulative Cases",
+    color = "Country"
+      ) +
+  geom_label(aes(label = (totalcases)), 
+             hjust = "inward",
+             size  = 3,
+             color = RColorBrewer::brewer.pal(n = 12, name = "Blues")[8]) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+## Challenge 2 Plots
+
+The goal of this challenge is to visualize the distribution of the mortality rate (deaths / population)
+
+```{r code2 plot3, results='hide', fig.width=9, fig.height=6}
+library(tidyverse)
+library(scales)
+library(ggplot2)
+library(lubridate)
+library(ggthemes)
+library(dbplyr)
+library(maps)
+
+# Importing data
+
+
+covid_data_tbl <- read_csv("https://opendata.ecdc.europa.eu/covid19/casedistribution/csv")
+
+world <- map_data("world") %>%
+  mutate(across(region, str_replace_all, "_", " ")) %>%
+  mutate(region = case_when(
+    
+    region == "UK" ~ "United_Kingdom",
+    region == "USA" ~ "United_States_of_America",
+    region == "Czech_Republic" ~ "Czechia",
+    TRUE ~ region
+    
+  ))
+
+covid_data_tbl %>% 
+  mutate(across(countriesAndTerritories, str_replace_all, "_", " ")) %>%
+  mutate(countriesAndTerritories = case_when(
+    
+    countriesAndTerritories == "United Kingdom" ~ "United_Kingdom",
+    countriesAndTerritories == "United_States_of_America" ~ "United States of America",
+    countriesAndTerritories == "Czechia"~"Czechia",
+    TRUE ~ countriesAndTerritories
+    
+  ))
+
+#manipulation of world data table
+world_map <- world %>%
+  select(region, long, lat, group) %>%
+  rename(countriesAndTerritories = region)
+
+
+#manipulation of covid data table
+covid_modified_data_tbl <- covid_data_tbl %>%
+  select(day, month, year, countriesAndTerritories, deaths, popData2019) %>%
+  group_by(year, countriesAndTerritories, popData2019) %>%
+  summarise(total_death = sum(deaths)) %>%
+  ungroup() %>%
+  mutate(mortality_rate = (total_death / popData2019) * 100)
+
+#merging data between 2 tables 
+All_data_tbl <- left_join(covid_modified_data_tbl,
+                          world_map,
+                          by = "countriesAndTerritories") %>%
+                filter(year == 2020)
+
+#first layer of the map
+world_map <- map_data("world")
+ggplot(world_map, aes(x = long, y = lat, group = group)) +
+  geom_polygon(fill="lightblue", colour = "black",size = 0.1)
+
+#second layer of the map
+ggplot(data = All_data_tbl, aes(x = long, y = lat, group = group)) +
+  geom_polygon(aes(fill = mortality_rate), color = "blue",size = 0.1) +
+  scale_fill_viridis_c(option = "E", alpha = 0.75 )
 ```

@@ -15,9 +15,9 @@ world <- map_data("world") %>%
   mutate(across(region, str_replace_all, "_", " ")) %>%
   mutate(region = case_when(
     
-    region == "UK"~ "United_Kingdom",
-    region == "USA"~"United_States_of_America",
-    region == "Czech_Republic"~"Czechia",
+    region == "UK" ~ "United_Kingdom",
+    region == "USA" ~ "United_States_of_America",
+    region == "Czech_Republic" ~ "Czechia",
     TRUE ~ region
     
   ))
@@ -50,15 +50,15 @@ covid_modified_data_tbl <- covid_data_tbl %>%
 #merging data between 2 tables 
 All_data_tbl <- left_join(covid_modified_data_tbl,
                           world_map,
-                          by="countriesAndTerritories") %>%
-                filter(year==2020)
+                          by = "countriesAndTerritories") %>%
+                filter(year == 2020)
 
 #first layer of the map
 world_map <- map_data("world")
 ggplot(world_map, aes(x = long, y = lat, group = group)) +
-  geom_polygon(fill="lightgray", colour = "black",size=0.1)
+  geom_polygon(fill="lightblue", colour = "black",size = 0.1)
 
 #second layer of the map
-ggplot(data=All_data_tbl, aes(x=long, y=lat, group = group))+
-  geom_polygon(aes(fill = mortality_rate), color = "red",size=0.1)+
-  scale_fill_viridis_c(option = "C", alpha = 0.75 )
+ggplot(data = All_data_tbl, aes(x = long, y = lat, group = group)) +
+  geom_polygon(aes(fill = mortality_rate), color = "blue",size = 0.1) +
+  scale_fill_viridis_c(option = "E", alpha = 0.75 )
