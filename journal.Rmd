@@ -50,7 +50,7 @@ The goal of this case study is to analyze the sales of bikes sold through bike s
 #### Sales by location and year
 
 
-## Sales by year results
+#### Sales by year results
 
 ```{r code, results='hide'}
 # 1.0 Load libraries ----
@@ -164,7 +164,7 @@ labs(
 ```
 
 
-## Sales by year and Main bike Category results
+#### Sales by year and Main bike Category results
 
 ```{r}
 # 5.2 Sales by Year and Category ----
@@ -211,7 +211,7 @@ labs(
 )
 ```
 
-## Sales by location results
+#### Sales by location results
 
 ```{r fig.width=9, fig.height=7}
 
@@ -304,7 +304,7 @@ labs(
 
 ```
 
-## Sales by location and year results
+#### Sales by location and year results
 
 ```{r plot, fig.width=12, fig.height=9}
 
@@ -352,9 +352,13 @@ labs(
 ) + theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 ```
-# Web Data Scraping (Chapter 3) ----
+
+# Web Data Scraping (Chapter 3)
+
 ## Challenge 1 results
+
 In this section, the aim was to learn to scrap the web for data using an API. After a lot of research Accuweather API was chosen to acquire the info of 100 Countries.
+
 ```{r}
 library(httr)
 library(jsonlite)
@@ -377,6 +381,7 @@ country_list_as_df <- data.frame(City, Country, Region,
 head(country_list_as_df, 10)
 ```
 ## Challenge 2 results
+
 The goal of this challenge was to scrap the web manually using selector gadget to get the price details of one bike category of ROSE bike manufacturer. A graph was added at the end to give an insight on the price difference between the different MTB bike models of ROSE. The removed elements from the graph are not yet available for sale (coming soon).
 ```{r}
 library(tidyverse) # Main Package - Loads dplyr, purrr, etc.
@@ -428,14 +433,8 @@ ggplot(bike_name_price_tbl, aes(x = name, y = price_in_EUR, color = name)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-# Data Wrangling (Chapter 4) ----
+# Data Wrangling (Chapter 4)
 In this chapter, the acquired skills of Data Wrangling were used as much as possible to answer the following questions with Data Analysis:
-
-1.Which US company has the most patents?
-
-2.Recent patent activity: What US company had the most patents granted in 2019?
-
-3.What is the most innovative tech sector? For the top 10 companies (worldwide) with the most patents, what are the top 5 USPTO tech main classes?
 ```{r}
 # Importing library: ---- 
 library(vroom)
@@ -454,7 +453,7 @@ col_types <- list(
 )
 
 patent_tbl <- vroom(
-  file       = "/Users/fadyyoussef/Documents/DS_101/02_data_wrangling/patent.tsv",
+  file       = "/Users/fadyyoussef/Documents/DS_101/02_data_wrangling/Patent_data_reduced/patent.tsv",
   delim      = "\t",
   col_types  = col_types,
   na         = c("", "NA", "NULL")
@@ -470,7 +469,7 @@ col_types_assignee <- list(
 )
 
 assignee_tbl <- vroom(
-  file       = "/Users/fadyyoussef/Documents/DS_101/02_data_wrangling/assignee.tsv", 
+  file       = "/Users/fadyyoussef/Documents/DS_101/02_data_wrangling/Patent_data_reduced/assignee.tsv", 
   delim      = "\t", 
   col_types  = col_types_assignee,
   na         = c("", "NA", "NULL")
@@ -484,7 +483,7 @@ col_types_patent_assignee <- list(
 )
 
 patent_assignee_tbl <- vroom(
-  file       = "/Users/fadyyoussef/Documents/DS_101/02_data_wrangling/patent_assignee.tsv", 
+  file       = "/Users/fadyyoussef/Documents/DS_101/02_data_wrangling/Patent_data_reduced/patent_assignee.tsv", 
   delim      = "\t", 
   col_types  = col_types_patent_assignee,
   na         = c("", "NA", "NULL")
@@ -498,7 +497,7 @@ col_types_uspc <- list(
 
 
 uspc_tbl <- vroom(
-  file       = "/Users/fadyyoussef/Documents/DS_101/02_data_wrangling/uspc.tsv", 
+  file       = "/Users/fadyyoussef/Documents/DS_101/02_data_wrangling/Patent_data_reduced/uspc.tsv", 
   delim      = "\t", 
   col_types  = col_types_uspc,
   na         = c("", "NA", "NULL")
@@ -511,7 +510,9 @@ setDT(assignee_tbl)
 setDT(patent_tbl)
 setDT(patent_assignee_tbl)
 setDT(uspc_tbl)
-
+```
+## Which US company has the most patents?
+```{r}
 # 4.0 DATA WRANGLING ----
 # Q1.What US company / corporation has the most patents? 
 
@@ -531,8 +532,11 @@ us_patents <- combined_data %>%
   arrange(desc(total))   
 
 us_top_10 <- us_patents %>% slice(1:10)
+us_top_10
+```
 
-
+## Recent patent activity: What US company had the most patents granted in 2019?
+```{r}
 # Q2. What US company had the most patents granted in 2019? 
 
 
@@ -549,7 +553,7 @@ tbl_2 <- patent_tbl %>%
 setnames(tbl_2, "id", "patent_id")
 combined_data_2 <- merge(x = tbl_2, y = combined_data, by = "patent_id")
 
-us_top10_2014_01 <- combined_data_2%>%
+us_top_10_2014 <- combined_data_2%>%
                     filter(type == 2)%>%
                     filter(!is.na(patent_id) || !is.na(organization)) %>%
                     select(organization, patent_id) %>%
@@ -557,8 +561,9 @@ us_top10_2014_01 <- combined_data_2%>%
                     count(patent_id) %>%   
                     summarise(total_patents = sum(n))%>%
                     arrange(desc(total_patents)) %>% slice(1:10)  
+us_top_10_2014
 
-us_top10_2014_01_new <- combined_data_2%>%
+us_top_10_2014_new <- combined_data_2%>%
                         filter(type == 2 & num_claims == 1)%>%
                         filter(!is.na(patent_id) || !is.na(organization)) %>%
                         select(organization, patent_id) %>%
@@ -566,7 +571,12 @@ us_top10_2014_01_new <- combined_data_2%>%
                         count(patent_id) %>%   
                         summarise(total_patents = sum(n))%>%
                         arrange(desc(total_patents)) %>% slice(1:10)
-                  
+us_top_10_2014_new
+
+```
+
+## What is the most innovative tech sector? For the top 10 companies (worldwide) with the most patents, what are the top 5 USPTO tech main classes?
+```{r}
 #Q3. What is the most innovative tech sector? 
 #For the top 10 companies (worldwide) with the most patents,
 #what are the top 5 USPTO tech main classes?
@@ -585,5 +595,5 @@ top10_worlwide_patents <- combined_data_3  %>%
                   ungroup() %>%
                   arrange(desc(total_patents_wordwide)) %>% slice(1:10)  
 
-top10_worlwid_top5_upts_ <- top10_worlwide %>% slice(1:5)  
+top10_worlwide_patents 
 ```
