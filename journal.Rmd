@@ -427,3 +427,15 @@ ggplot(bike_name_price_tbl, aes(x = name, y = price_in_EUR, color = name)) +
   labs(title = "Bike Model vs Price") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
+
+# Data Wrangling (Chapter 4) ----
+In this chapter, the acquired skills of Data Wrangling were used as much as possible to answer the following questions with Data Analysis:
+
+1.Which US company has the most patents?
+
+2.Recent patent activity: What US company had the most patents granted in 2019?
+
+3.What is the most innovative tech sector? For the top 10 companies (worldwide) with the most patents, what are the top 5 USPTO tech main classes?
+```{r}
+
+```
